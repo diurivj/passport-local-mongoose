@@ -1,0 +1,23 @@
+<h2>{{title}}</h2>
+
+<form action="{{action}}" method="POST">
+  {{#if register}}
+  <p>
+    <label>Name</label>
+    <input type="text" name="name" placeholder="Name">
+  </p>
+  <p>
+    <label>Lastname</label>
+    <input type="text" name="lastname" placeholder="Lastname">
+  </p>
+  {{/if}}
+  <p>
+    <label>Email</label>
+    <input type="email" name="email" placeholder="Email">
+  </p>
+  <p>
+    <label>Password</label>
+    <input type="password" name="password" placeholder="Password">
+  </p>
+  <input type="submit" value="{{button}}">
+</form>
