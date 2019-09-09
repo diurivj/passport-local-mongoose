@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const User = require('../models/User');
 const passport = require('../config/passport');
+const ensureLogin = require('connect-ensure-login');
 
 router.get('/signup', (req, res, next) => {
   const config = {
@@ -37,8 +38,13 @@ router.post('/login', passport.authenticate('local'), (req, res, next) => {
   res.redirect('/profile');
 });
 
-router.get('/profile', isLoggedIn, (req, res, next) => {
+router.get('/profile', ensureLogin.ensureLoggedIn(), (req, res, next) => {
   res.render('auth/profile', { user: req.user });
+});
+
+router.get('/logout', (req, res, next) => {
+  req.logout();
+  res.redirect('/login');
 });
 
 function isLoggedIn(req, res, next) {
