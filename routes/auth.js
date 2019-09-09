@@ -33,19 +33,33 @@ router.get('/login', (req, res, next) => {
   res.render('auth/form', config);
 });
 
-router.post('/login', passport.authenticate('local'), (req, res, next) => {
-  console.log(req.user, req.session);
-  res.redirect('/profile');
-});
+router.post(
+  '/login',
+  passport.authenticate('local', {
+    failureRedirect: '/login',
+    successRedirect: '/profile'
+  })
+);
 
 router.get('/profile', ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  res.render('auth/profile', { user: req.user });
+  res.render('auth/profile', { loggedUser: req.user });
 });
 
 router.get('/logout', (req, res, next) => {
   req.logout();
   res.redirect('/login');
 });
+
+router.get('/facebook/login', passport.authenticate('facebook', { scope: 'email' }));
+
+router.get(
+  '/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login', scope: 'email' }),
+  function(req, res) {
+    req.app.locals.loggedUser = req.user;
+    res.redirect('/profile');
+  }
+);
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
